@@ -21,9 +21,9 @@ const UserLogin = () => {
     setEmail('')
     setPassword('')
   }
-useEffect(()=>{
-      console.log(userData);
-    },[userData])
+// useEffect(()=>{
+//       console.log(userData);
+//     },[userData])
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
