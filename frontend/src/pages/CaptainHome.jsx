@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-
+import axios from 'axios'
 import CaptainDetails from "../components/CaptainDetails";
 import RidePopUp from "../components/RidePopUp";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
@@ -10,21 +10,64 @@ import { SocketContext } from '../context/SocketContext'
 import { CaptainDataContext } from '../context/CaptainContext'
 
 const CaptainHome = () => {
-  const [ridePopupPanel, setRidePopupPanel] = useState(true);
+  const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
-
+  const [ride, setRide] = useState(null)
   const ridePopupPanelRef = useRef(null);
   const confirmRidePopupPanelRef = useRef(null);
 
   const { socket } = useContext(SocketContext)
-    const { captain } = useContext(CaptainDataContext)
-    useEffect(() => {
-        socket.emit('join', {
+  const { captain } = useContext(CaptainDataContext)
+  useEffect(() => {
+    socket.emit('join', {
+      userId: captain._id,
+      userType: 'captain'
+    })
+    const updateLocation = () => {
+      if (navigator.geolocation)//GPS access mil rahi hai ya nahi 
+      {
+        navigator.geolocation.getCurrentPosition(position => {
+          // console.log(position);
+          socket.emit('update-location-captain', {
             userId: captain._id,
-            userType: 'captain'
+            location: {
+              ltd: position.coords.latitude,
+              lng: position.coords.longitude
+            }
+          })
         })
-    }, [])
+      }
+    }
 
+    const locationInterval = setInterval(updateLocation, 10000)
+    updateLocation()
+
+  }, [])
+
+  socket.on('new-ride', (data) => {
+    console.log(data)
+    setRide(data)
+    setRidePopupPanel(true)
+  })
+
+  async function confirmRide() {
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+
+      rideId: ride._id,
+      captainId: captain._id,
+
+
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    setRidePopupPanel(false)
+    setConfirmRidePopupPanel(true)
+
+  } 
 
   useGSAP(
     function () {
@@ -85,8 +128,10 @@ const CaptainHome = () => {
         className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
       >
         <RidePopUp
+          ride={ride}
           setRidePopupPanel={setRidePopupPanel}
           setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+          confirmRide={confirmRide}
         />
       </div>
       <div
@@ -94,6 +139,7 @@ const CaptainHome = () => {
         className="fixed w-full h-screen z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12"
       >
         <ConfirmRidePopUp
+          ride={ride}
           setConfirmRidePopupPanel={setConfirmRidePopupPanel}
           setRidePopupPanel={setRidePopupPanel}
         />

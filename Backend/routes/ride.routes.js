@@ -13,12 +13,17 @@ router.post('/create',
     rideController.createRide
 )
 
-
 router.get('/get-fare',
     authMiddleware.authUser,
     query('pickup').isString().isLength({ min: 3 }).withMessage('Invalid pickup address'),
     query('destination').isString().isLength({ min: 3 }).withMessage('Invalid destination address'),
     rideController.getFare
+)
+
+router.post('/confirm',
+    authMiddleware.authCaptain,
+    body('rideId').isMongoId().withMessage('Invalid ride id'),
+    rideController.confirmRide
 )
 
 module.exports = router;
