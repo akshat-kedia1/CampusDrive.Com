@@ -78,3 +78,21 @@ module.exports.logoutCaptain = async(req,res,next)=>{
     await blackListTokenModel.create({token});
     res.status(200).json({message: 'Logged out'});
 }
+
+module.exports.getCaptainDetails = async (req, res, next) => {
+  try {
+    const id = req.captain._id;
+    const captain = await captainModel.findById(id);
+
+    if (!captain) {
+      return res.status(404).json({ msg: "Captain not found" });
+    }
+
+    //console.log("sending captian; ", captain);
+    res.status(200).json({ captain });
+  } catch (error) {
+    console.error("Error fetching captain:", error);
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+

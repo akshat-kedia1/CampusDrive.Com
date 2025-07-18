@@ -2,70 +2,91 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import axios from 'axios'
+import axios from "axios";
 import CaptainDetails from "../components/CaptainDetails";
 import RidePopUp from "../components/RidePopUp";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
-import { SocketContext } from '../context/SocketContext'
-import { CaptainDataContext } from '../context/CaptainContext'
+import { SocketContext } from "../context/SocketContext";
+import { CaptainDataContext } from "../context/CaptainContext";
 import LiveTracking from "../components/LiveTracking";
 
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
-  const [ride, setRide] = useState(null)
+  const [ride, setRide] = useState(null);
   const ridePopupPanelRef = useRef(null);
+  const [captainDetails, setCaptainDetails] = useState(null);
   const confirmRidePopupPanelRef = useRef(null);
 
-  const { socket } = useContext(SocketContext)
-  const { captain } = useContext(CaptainDataContext)
+  const { socket } = useContext(SocketContext);
+  const { captain } = useContext(CaptainDataContext);
   useEffect(() => {
-    socket.emit('join', {
+    const getCaptainDetails = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/captain/get-captain-details`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("captain: ", res.data.captain);
+        setCaptainDetails(res.data.captain);
+      } catch (error) {
+        console.log("error in getting captain details:", error);
+      }
+    };
+
+    getCaptainDetails();
+    socket.emit("join", {
       userId: captain._id,
-      userType: 'captain'
-    })
+      userType: "captain",
+    });
+
     const updateLocation = () => {
-      if (navigator.geolocation)//GPS access mil rahi hai ya nahi 
-      {
-        navigator.geolocation.getCurrentPosition(position => {
+      if (navigator.geolocation) {
+        //GPS access mil rahi hai ya nahi
+        navigator.geolocation.getCurrentPosition((position) => {
           // console.log(position);
-          socket.emit('update-location-captain', {
+          socket.emit("update-location-captain", {
             userId: captain._id,
             location: {
               ltd: position.coords.latitude,
-              lng: position.coords.longitude
-            }
-          })
-        })
+              lng: position.coords.longitude,
+            },
+          });
+        });
       }
-    }
+    };
 
-    const locationInterval = setInterval(updateLocation, 10000)
-    updateLocation()
+    const locationInterval = setInterval(updateLocation, 10000);
+    updateLocation();
+  }, []);
 
-  }, [])
-
-  socket.on('new-ride', (data) => {
-    console.log(data)
-    setRide(data)
-    setRidePopupPanel(true)
-  })
+  socket.on("new-ride", (data) => {
+    console.log(data);
+    setRide(data);
+    setRidePopupPanel(true);
+  });
 
   async function confirmRide() {
-
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
-      rideId: ride._id,
-      captainId: captain._id,
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/rides/confirm`,
+      {
+        rideId: ride._id,
+        captainId: captain._id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
-    })
+    );
 
-    setRidePopupPanel(false)
-    setConfirmRidePopupPanel(true)
-
-  } 
+    setRidePopupPanel(false);
+    setConfirmRidePopupPanel(true);
+  }
 
   useGSAP(
     function () {
@@ -112,10 +133,10 @@ const CaptainHome = () => {
         </Link>
       </div>
       <div className="h-3/5">
-        <LiveTracking/>
+        <LiveTracking />
       </div>
       <div className="h-2/5 p-6">
-        <CaptainDetails />
+        <CaptainDetails captainDetails={captainDetails} />
       </div>
       <div
         ref={ridePopupPanelRef}

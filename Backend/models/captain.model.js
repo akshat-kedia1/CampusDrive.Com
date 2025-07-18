@@ -63,6 +63,28 @@ const captainSchema = new mongoose.Schema({
       type: Number,
     },
   },
+  dailyStats: {
+    date: {
+      type: Date,
+      default: new Date().setHours(0, 0, 0, 0),
+    },
+    totalDistance: {
+      type: Number,
+      default: 0,
+    },
+    totalEarnings: {
+      type: Number,
+      default: 0,
+    },
+    totalTime: {
+      type: Number,
+      default: 0,
+    },
+    totalRides: {
+      type: Number,
+      default: 0,
+    },
+  },
 });
 
 captainSchema.methods.generateAuthToken = function () {
@@ -70,6 +92,25 @@ captainSchema.methods.generateAuthToken = function () {
     expiresIn: "24h",
   });
   return token;
+};
+
+captainSchema.statics.resetDailyStats = async function () {
+  try {
+    await this.updateMany(
+      {},
+      {
+        $set: {
+          totalEarnings: 0,
+          distanceCovered: 0,
+          totalRideTime: 0,
+          ridesCompleted: 0,
+        },
+      }
+    );
+    console.log("Captain daily stats reset successfully.");
+  } catch (error) {
+    console.error("Error resetting captain daily stats:", error);
+  }
 };
 
 captainSchema.methods.comparePassword = async function (password) {

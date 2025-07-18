@@ -7,6 +7,8 @@ const server = http.createServer(app);
 
 initializeSocket(server);
 
+require('./cron/resetCaptainStats');
+
 server.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
 });
