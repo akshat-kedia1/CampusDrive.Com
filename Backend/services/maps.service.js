@@ -14,12 +14,13 @@ module.exports.getAddressCoordinate = async (address) => {
                 lng: location.lng
             };
         } else {
-            throw new Error('Unable to fetch coordinates');
-        }
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    console.error("Google API Error:", response.data);
+    throw new Error('Unable to fetch coordinates');
+}
+    } catch (err) {
+    console.error("getAddressCoordinates fetch error:", err.response?.data || err.message);
+    throw err;
+}
 }
 
 module.exports.getDistanceTime = async (origin, destination) => {
@@ -63,12 +64,13 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
         if (response.data.status === 'OK') {
             return response.data.predictions.map(prediction => prediction.description).filter(value => value);
         } else {
-            throw new Error('Unable to fetch suggestions');
-        }
+    console.error("Google API Error:", response.data);
+    throw new Error('Unable to fetch suggestions');
+}
     } catch (err) {
-        console.error(err);
-        throw err;
-    }
+    console.error("Autocomplete fetch error:", err.response?.data || err.message);
+    throw err;
+}
 }
 
 module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {

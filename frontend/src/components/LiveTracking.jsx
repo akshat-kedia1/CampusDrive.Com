@@ -41,6 +41,13 @@ const LiveTracking = () => {
                 mapContainerStyle={containerStyle}
                 center={currentPosition}
                 zoom={15}
+                options={{
+                mapTypeControl: true,
+                streetViewControl: true,
+                zoomControl: true,
+                fullscreenControl: true,
+                mapTypeId: 'hybrid'
+  }}
             >
                 <Marker position={currentPosition} />
             </GoogleMap>
