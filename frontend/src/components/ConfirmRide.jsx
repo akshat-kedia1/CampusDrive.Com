@@ -13,11 +13,11 @@ const ConfirmRide = (props) => {
   className="h-20"
   src={
     props.vehicleType === "car"
-      ? "../public/car.jpg"
+      ? "/car.jpg"
       : props.vehicleType === "moto"
-      ? "../public/moto.webp"
+      ? "/moto.webp"
       : props.vehicleType === "auto"
-      ? "../public/auto.webp"
+      ? "/auto.webp"
       : "https://swyft.pl/wp-content/uploads/2023/05/how-many-people-can-a-uberx-take.jpg"
   }
   alt=""

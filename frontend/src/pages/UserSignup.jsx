@@ -49,7 +49,7 @@ const UserSignup = () => {
     <div>
       <div className='p-7 h-screen flex flex-col justify-between'>
         <div>
-          <img className='w-[150px] mb-6' src="../public/SwiftGo.jpg" alt="" />
+          <img className='w-[150px] mb-6' src="/SwiftGo.jpg" alt="" />
 
           <form onSubmit={(e) => {
             submitHandler(e)

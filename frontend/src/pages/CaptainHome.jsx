@@ -120,11 +120,7 @@ const CaptainHome = () => {
   return (
     <div className="h-screen">
       <div className="fixed p-6 top-0 flex items-center justify-between w-screen">
-        <img
-          className="w-16"
-          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-          alt=""
-        />
+        <img className='w-[150px] mb-6' src="/SwiftGo.jpg" alt="" />
         <Link
           to="/captain-home"
           className=" h-10 w-10 bg-white flex items-center justify-center rounded-full"

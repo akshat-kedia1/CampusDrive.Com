@@ -11,9 +11,9 @@ const VehiclePanel = (props) => {
                 props.selectVehicle('car')
                 props.setConfirmRidePanel(true)
             }} className='flex border-2 active:border-black  mb-2 rounded-xl w-full p-3  items-center justify-between'>
-                <img className='h-10' src="../public/car.jpg" alt="" />
+                <img className='h-10' src="/car.jpg" alt="" />
                 <div className='ml-2 w-1/2'>
-                    <h4 className='font-medium text-base'>UberGo <span><i className="ri-user-3-fill"></i>4</span></h4>
+                    <h4 className='font-medium text-base'>Car <span><i className="ri-user-3-fill"></i>4</span></h4>
                     <h5 className='font-medium text-sm'>2 mins away </h5>
                     <p className='font-normal text-xs text-gray-600'>Affordable, compact rides</p>
                 </div>
@@ -23,7 +23,7 @@ const VehiclePanel = (props) => {
                 props.setConfirmRidePanel(true)
                 props.selectVehicle('moto')
             }} className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3  items-center justify-between'>
-                <img className='h-10' src="../public/moto.webp" alt="" />
+                <img className='h-10' src="/moto.webp" alt="" />
                 <div className='-ml-2 w-1/2'>
                     <h4 className='font-medium text-base'>Moto <span><i className="ri-user-3-fill"></i>1</span></h4>
                     <h5 className='font-medium text-sm'>3 mins away </h5>
@@ -37,7 +37,7 @@ const VehiclePanel = (props) => {
             }} className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3  items-center justify-between'>
                 <img className='h-10' src="auto.webp" alt="" />
                 <div className='ml-2 w-1/2'>
-                    <h4 className='font-medium text-base'>UberAuto <span><i className="ri-user-3-fill"></i>3</span></h4>
+                    <h4 className='font-medium text-base'>Auto <span><i className="ri-user-3-fill"></i>3</span></h4>
                     <h5 className='font-medium text-sm'>3 mins away </h5>
                     <p className='font-normal text-xs text-gray-600'>Affordable Auto rides</p>
                 </div>

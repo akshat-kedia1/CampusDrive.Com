@@ -6,10 +6,7 @@ const containerStyle = {
     height: '100%',
 };
 
-const center = {
-    lat: -3.745,
-    lng: -38.523
-};
+const center = { ltd: 25.4990941, lng: 81.8582923 };
 
 const LiveTracking = () => {
     const [ currentPosition, setCurrentPosition ] = useState(center);
